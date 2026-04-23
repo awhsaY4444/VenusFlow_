@@ -10,6 +10,31 @@ export const oauthRouter = express.Router();
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
+ * @swagger
+ * /api/auth/oauth/google:
+ *   post:
+ *     summary: Login with Google
+ *     tags: [OAuth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idToken:
+ *                 type: string
+ *                 example: your-google-id-token
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid Google token
+ *       403:
+ *         description: User not registered
+ */
+
+/**
  * Handle Google Login (Token Swap)
  */
 oauthRouter.post(
@@ -39,11 +64,9 @@ oauthRouter.post(
       let user = userResult.rows[0];
 
       if (!user) {
-        // Handle new user creation (simplified: requires an organization)
-        // In a real flow, you might redirect to "Create Organization" if no invite
-        return res.status(403).json({ 
-          success: false, 
-          message: "Account not found. Please join via invitation first." 
+        return res.status(403).json({
+          success: false,
+          message: "Account not found. Please join via invitation first.",
         });
       }
 
@@ -56,7 +79,12 @@ oauthRouter.post(
       }
 
       const token = jwt.sign(
-        { id: user.id, organizationId: user.organization_id, role: user.role, permissions: user.permissions },
+        {
+          id: user.id,
+          organizationId: user.organization_id,
+          role: user.role,
+          permissions: user.permissions,
+        },
         config.jwtSecret,
         { expiresIn: "7d" }
       );

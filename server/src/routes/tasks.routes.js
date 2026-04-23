@@ -16,9 +16,27 @@ import {
   updateTask,
 } from "../services/task.service.js";
 
-
 export const tasksRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Tasks
+ *   description: Task management APIs
+ */
+
+/**
+ * @swagger
+ * /api/tasks:
+ *   get:
+ *     summary: Get all tasks
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ */
 tasksRouter.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -37,6 +55,15 @@ tasksRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks/{taskId}:
+ *   get:
+ *     summary: Get task by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.get(
   "/:taskId",
   asyncHandler(async (req, res) => {
@@ -50,6 +77,15 @@ tasksRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks:
+ *   post:
+ *     summary: Create a new task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.post(
   "/",
   validate(TaskSchema),
@@ -65,10 +101,18 @@ tasksRouter.post(
   })
 );
 
-
+/**
+ * @swagger
+ * /api/tasks/{taskId}:
+ *   put:
+ *     summary: Update a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.put(
   "/:taskId",
-  validate(TaskSchema.partial()), // Partial for updates
+  validate(TaskSchema.partial()),
   asyncHandler(async (req, res) => {
     const task = await updateTask({
       organizationId: req.user.organizationId,
@@ -82,7 +126,15 @@ tasksRouter.put(
   })
 );
 
-
+/**
+ * @swagger
+ * /api/tasks/{taskId}:
+ *   delete:
+ *     summary: Delete a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.delete(
   "/:taskId",
   asyncHandler(async (req, res) => {
@@ -96,6 +148,15 @@ tasksRouter.delete(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks/{taskId}/restore:
+ *   post:
+ *     summary: Restore deleted task (Admin only)
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.post(
   "/:taskId/restore",
   requireRole("admin"),
@@ -109,6 +170,15 @@ tasksRouter.post(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks/{taskId}/audit:
+ *   get:
+ *     summary: Get task audit logs
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.get(
   "/:taskId/audit",
   asyncHandler(async (req, res) => {
@@ -122,6 +192,15 @@ tasksRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks/{taskId}/comments:
+ *   get:
+ *     summary: Get task comments
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.get(
   "/:taskId/comments",
   asyncHandler(async (req, res) => {
@@ -135,6 +214,15 @@ tasksRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/tasks/{taskId}/comments:
+ *   post:
+ *     summary: Add comment to task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ */
 tasksRouter.post(
   "/:taskId/comments",
   asyncHandler(async (req, res) => {
@@ -152,4 +240,3 @@ tasksRouter.post(
     res.status(201).json({ success: true, comment });
   })
 );
-

@@ -4,6 +4,60 @@ import { query } from "../db.js";
 
 export const dashboardRouter = express.Router();
 
+/**
+ * @swagger
+ * /api/dashboard:
+ *   get:
+ *     summary: Get dashboard statistics and recent activity
+ *     tags: [Dashboard]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Dashboard data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 stats:
+ *                   type: object
+ *                   properties:
+ *                     totalTasks:
+ *                       type: number
+ *                       example: 25
+ *                     completedTasks:
+ *                       type: number
+ *                       example: 10
+ *                     inProgressTasks:
+ *                       type: number
+ *                       example: 8
+ *                     overdueTasks:
+ *                       type: number
+ *                       example: 3
+ *                 activity:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: number
+ *                       action:
+ *                         type: string
+ *                       actorName:
+ *                         type: string
+ *                       taskTitle:
+ *                         type: string
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *       401:
+ *         description: Unauthorized
+ */
+
 dashboardRouter.get(
   "/",
   asyncHandler(async (req, res) => {

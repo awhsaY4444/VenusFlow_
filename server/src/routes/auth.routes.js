@@ -12,7 +12,21 @@ import { config } from "../config.js";
 export const authRouter = express.Router();
 
 /**
- * Test Route: Verify email delivery with configured SMTP credentials.
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication APIs
+ */
+
+/**
+ * @swagger
+ * /api/auth/test-email:
+ *   get:
+ *     summary: Send test email
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Email sent successfully
  */
 authRouter.get(
   "/test-email",
@@ -31,6 +45,31 @@ authRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               organizationName:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ */
 authRouter.post(
   "/register",
   asyncHandler(async (req, res) => {
@@ -45,6 +84,27 @@ authRouter.post(
   })
 );
 
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Login successful
+ */
 authRouter.post(
   "/login",
   asyncHandler(async (req, res) => {
@@ -59,6 +119,16 @@ authRouter.post(
   })
 );
 
+/**
+ * @swagger
+ * /api/auth/google:
+ *   post:
+ *     summary: Login with Google
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Google login successful
+ */
 authRouter.post(
   "/google",
   asyncHandler(async (req, res) => {
@@ -80,6 +150,18 @@ authRouter.post(
   })
 );
 
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get current user
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: User data fetched successfully
+ */
 authRouter.get(
   "/me",
   requireAuth,
@@ -95,7 +177,6 @@ authRouter.get(
       [req.user.id]
     );
 
-
     const user = result.rows[0];
     if (!user) {
       throw new AppError(404, "User not found");
@@ -110,7 +191,6 @@ authRouter.get(
         role: user.role,
         permissions: user.permissions || [],
         authProvider: user.auth_provider,
-
         avatarUrl: user.avatar_url,
         timezone: user.timezone,
         language: user.language,
@@ -130,6 +210,26 @@ authRouter.get(
   })
 );
 
-// Password Reset Routes
+/**
+ * @swagger
+ * /api/auth/forgot-password:
+ *   post:
+ *     summary: Send reset password email
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Reset email sent
+ */
 authRouter.post("/forgot-password", forgotPasswordHandler);
+
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *     summary: Reset user password
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Password reset successful
+ */
 authRouter.post("/reset-password", resetPasswordHandler);

@@ -6,9 +6,24 @@ import { AppError } from "../utils/errors.js";
 import { requireRole } from "../middleware/rbac.js";
 import { sendMemberInvitationEmail } from "../utils/email.js";
 
-
 export const usersRouter = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: User management APIs
+ */
+
+/**
+ * @swagger
+ * /api/users/me:
+ *   get:
+ *     summary: Get current user profile
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.get(
   "/me",
   asyncHandler(async (req, res) => {
@@ -52,6 +67,15 @@ usersRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users in organization
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.get(
   "/",
   asyncHandler(async (req, res) => {
@@ -78,6 +102,15 @@ usersRouter.get(
   })
 );
 
+/**
+ * @swagger
+ * /api/users/update:
+ *   put:
+ *     summary: Update user profile
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.put(
   "/update",
   asyncHandler(async (req, res) => {
@@ -145,31 +178,20 @@ usersRouter.put(
     res.json({
       success: true,
       message: "Profile updated successfully",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        authProvider: user.auth_provider,
-        avatarUrl: user.avatar_url,
-        timezone: user.timezone,
-        language: user.language,
-        theme: user.theme,
-        notifications: {
-          email: user.email_notifications,
-          taskUpdates: user.task_updates_notifications,
-          mentions: user.mentions_notifications,
-        },
-        organizationId: user.organization_id,
-        organizationName: user.organization_name,
-        organizationSlug: user.organization_slug,
-        createdAt: user.created_at,
-        updatedAt: user.updated_at,
-      },
+      user,
     });
   })
 );
 
+/**
+ * @swagger
+ * /api/users/change-password:
+ *   put:
+ *     summary: Change user password
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.put(
   "/change-password",
   asyncHandler(async (req, res) => {
@@ -184,9 +206,7 @@ usersRouter.put(
     }
 
     const result = await query(
-      `SELECT password_hash
-       FROM users
-       WHERE id = $1`,
+      `SELECT password_hash FROM users WHERE id = $1`,
       [req.user.id]
     );
 
@@ -203,9 +223,7 @@ usersRouter.put(
 
     const nextPasswordHash = await bcrypt.hash(newPassword, 10);
     await query(
-      `UPDATE users
-       SET password_hash = $2, updated_at = NOW()
-       WHERE id = $1`,
+      `UPDATE users SET password_hash = $2, updated_at = NOW() WHERE id = $1`,
       [req.user.id, nextPasswordHash]
     );
 
@@ -216,6 +234,15 @@ usersRouter.put(
   })
 );
 
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Create new user (Admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.post(
   "/",
   requireRole("admin"),
@@ -240,7 +267,6 @@ usersRouter.post(
 
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Fetch organization name for the invitation email
     const orgResult = await query("SELECT name FROM organizations WHERE id = $1", [req.user.organizationId]);
     const organizationName = orgResult.rows[0]?.name || "VenusFlow";
 
@@ -259,26 +285,21 @@ usersRouter.post(
 
     const user = result.rows[0];
 
-    // Fire off invitation email in the background
-    sendMemberInvitationEmail(email.toLowerCase(), name, organizationName, password).catch((err) => {
-      console.error("[Email] Invitation failed to send:", err);
-    });
+    sendMemberInvitationEmail(email.toLowerCase(), name, organizationName, password).catch(console.error);
 
-    res.status(201).json({
-      success: true,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        authProvider: user.auth_provider,
-        createdAt: user.created_at,
-      },
-    });
-
+    res.status(201).json({ success: true, user });
   })
 );
 
+/**
+ * @swagger
+ * /api/users/{userId}/role:
+ *   put:
+ *     summary: Update user role (Admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
 usersRouter.put(
   "/:userId/role",
   requireRole("admin"),
@@ -303,17 +324,6 @@ usersRouter.put(
       throw new AppError(404, "User not found");
     }
 
-    res.json({
-      success: true,
-      user: {
-        id: updatedUser.id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        role: updatedUser.role,
-        authProvider: updatedUser.auth_provider,
-        avatarUrl: updatedUser.avatar_url,
-        createdAt: updatedUser.created_at,
-      },
-    });
+    res.json({ success: true, user: updatedUser });
   })
 );
