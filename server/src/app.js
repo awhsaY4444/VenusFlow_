@@ -50,6 +50,10 @@ app.get("/api/health", (_req, res) => {
   res.json({ success: true, message: "VenusFlow API healthy" });
 });
 
+app.get("/", (_req, res) => {
+  res.redirect("/api-docs");
+});
+
 // 5. Routes
 app.use("/api/auth", authRouter);
 app.use("/api/auth/oauth", oauthRouter);

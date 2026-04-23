@@ -6,6 +6,9 @@ const { Pool } = pg;
 
 export const pool = new Pool({
   connectionString: config.databaseUrl,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export const tenantStorage = new AsyncLocalStorage();

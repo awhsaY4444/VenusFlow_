@@ -2,6 +2,7 @@ import { app } from "./app.js";
 import { config } from "./config.js";
 import { pool, query } from "./db.js";
 import { schemaSql } from "./schema.js";
+import 'dotenv/config';
 
 async function waitForDatabase(retries = 15, delayMs = 2000) {
   for (let attempt = 1; attempt <= retries; attempt += 1) {
