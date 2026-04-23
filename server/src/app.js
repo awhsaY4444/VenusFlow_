@@ -68,3 +68,12 @@ app.use("/api/analytics", requireAuth, tenantMiddleware, analyticsRouter);
 
 // 6. Global Error Handling
 app.use(errorHandler);
+import path from "path";
+
+const __dirname = new URL('.', import.meta.url).pathname;
+
+app.use(express.static(path.join(__dirname, "../dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
