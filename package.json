@@ -1,5 +1,5 @@
 {
-  "name": "opspilot-task-manager",
+  "name": "venusflow",
   "private": true,
   "workspaces": [
     "server",

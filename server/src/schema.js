@@ -38,6 +38,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS mentions_notifications BOOLEAN NOT NU
 ALTER TABLE users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(100);
 ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expires TIMESTAMPTZ;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS permissions TEXT[] DEFAULT '{}';
 
 
 CREATE INDEX IF NOT EXISTS idx_users_organization_id ON users(organization_id);

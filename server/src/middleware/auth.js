@@ -39,7 +39,8 @@ export async function requireAuth(req, _res, next) {
 
 
     next();
-  } catch {
+  } catch (error) {
+    console.error("Auth Middleware Error:", error.message);
     next(new AppError(401, "Invalid or expired token"));
   }
 }

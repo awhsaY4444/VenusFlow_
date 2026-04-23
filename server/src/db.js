@@ -4,9 +4,11 @@ import { AsyncLocalStorage } from "node:async_hooks";
 
 const { Pool } = pg;
 
+const isLocalhost = config.databaseUrl.includes("localhost") || config.databaseUrl.includes("127.0.0.1");
+
 export const pool = new Pool({
   connectionString: config.databaseUrl,
-  ssl: {
+  ssl: isLocalhost ? false : {
     rejectUnauthorized: false,
   },
 });

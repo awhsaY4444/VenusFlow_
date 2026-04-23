@@ -57,4 +57,4 @@ docker-data/
 # Misc
 # =========================
 .tmp/
-.cache/
+.cache/db_data/ 

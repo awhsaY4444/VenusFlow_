@@ -7,7 +7,7 @@ export const config = {
   port: Number(process.env.PORT || 4000),
   databaseUrl:
     process.env.DATABASE_URL ||
-    "postgres://postgres:postgres@localhost:5432/opspilot",
+    "postgres://postgres@localhost:5433/postgres",
   jwtSecret: process.env.JWT_SECRET || "replace-this-with-a-long-random-string",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1d",
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
@@ -21,6 +21,9 @@ export const config = {
 
   },
 };
+
+console.log("Config loaded. JWT_SECRET from env:", !!process.env.JWT_SECRET);
+console.log("Config loaded. DATABASE_URL from env:", !!process.env.DATABASE_URL);
 
 
 
