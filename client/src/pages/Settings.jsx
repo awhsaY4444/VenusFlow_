@@ -4,6 +4,7 @@ import {
   LockKeyhole,
   MonitorSmartphone,
   ShieldCheck,
+  Trash2,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -211,6 +212,20 @@ export function SettingsPage() {
       await api.updateUserRole(userId, role);
       await loadSettingsData();
       pushToast(tr("Role updated successfully."), "success");
+    } catch (error) {
+      pushToast(error.message, "error");
+    }
+  }
+
+  async function handleRemoveMember(userId) {
+    if (!window.confirm(tr("Are you sure you want to remove this member? This action is permanent."))) {
+      return;
+    }
+
+    try {
+      await api.deleteUser(userId);
+      pushToast(tr("Member removed successfully."), "success");
+      await loadSettingsData();
     } catch (error) {
       pushToast(error.message, "error");
     }
@@ -536,6 +551,15 @@ export function SettingsPage() {
                               <option value="member">{t("English", "member")}</option>
                               <option value="admin">{t("English", "admin")}</option>
                             </select>
+                            {member.id !== user.id && (
+                              <button
+                                className="p-2 text-ink-400 hover:text-red-600 transition-colors"
+                                onClick={() => handleRemoveMember(member.id)}
+                                title={t("English", "removeMember")}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            )}
                           </div>
                         </article>
                       ))

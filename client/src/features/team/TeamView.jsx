@@ -1,4 +1,4 @@
-import { Shield, UserPlus, Users } from "lucide-react";
+import { Shield, Trash2, UserPlus, Users } from "lucide-react";
 import { Avatar } from "../../components/ui/Avatar";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { SectionHeader } from "../../components/ui/SectionHeader";
@@ -11,6 +11,7 @@ export function TeamView({
   memberForm,
   onMemberChange,
   onMemberSubmit,
+  onRemoveMember,
 }) {
   return (
     <div className="h-full flex flex-col gap-8 overflow-hidden">
@@ -124,7 +125,18 @@ export function TeamView({
                       <p className="text-sm text-ink-500">{member.email}</p>
                     </div>
                   </div>
-                  <StatusBadge value={member.role} />
+                  <div className="flex items-center gap-3">
+                    <StatusBadge value={member.role} />
+                    {user.role === "admin" && member.id !== user.id && (
+                      <button
+                        className="p-2 text-ink-400 hover:text-red-600 transition-colors"
+                        onClick={() => onRemoveMember(member.id)}
+                        title={tr("Remove member", "सदस्य निकालें")}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
                 </article>
               ))}
             </div>

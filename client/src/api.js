@@ -132,6 +132,11 @@ export const api = {
       body: JSON.stringify(payload),
     });
   },
+  deleteUser(userId) {
+    return request(`/users/${userId}`, {
+      method: "DELETE",
+    });
+  },
 };
 
 

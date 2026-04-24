@@ -327,3 +327,38 @@ usersRouter.put(
     res.json({ success: true, user: updatedUser });
   })
 );
+
+/**
+ * @swagger
+ * /api/users/{userId}:
+ *   delete:
+ *     summary: Remove user from organization (Admin only)
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ */
+usersRouter.delete(
+  "/:userId",
+  requireRole("admin"),
+  asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    if (userId === req.user.id) {
+      throw new AppError(400, "You cannot remove yourself from the workspace");
+    }
+
+    const result = await query(
+      "DELETE FROM users WHERE id = $1 AND organization_id = $2 RETURNING id, name",
+      [userId, req.user.organizationId]
+    );
+
+    if (result.rowCount === 0) {
+      throw new AppError(404, "Member not found in your organization");
+    }
+
+    res.json({
+      success: true,
+      message: `Member ${result.rows[0].name} has been strictly removed`,
+    });
+  })
+);

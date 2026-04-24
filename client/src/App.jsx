@@ -237,6 +237,20 @@ function App() {
     }
   }
 
+  async function handleRemoveMember(userId) {
+    if (!window.confirm(tr("Are you sure you want to remove this member? This action is permanent.", "क्या आप वाकई इस सदस्य को हटाना चाहते हैं? यह क्रिया स्थायी है।"))) {
+      return;
+    }
+
+    try {
+      await api.deleteUser(userId);
+      pushToast(tr("Member removed successfully.", "सदस्य सफलतापूर्वक हटा दिया गया।"), "success");
+      await loadWorkspace();
+    } catch (error) {
+      pushToast(error.message, "error");
+    }
+  }
+
   function startTaskEdit(task) {
     setCurrentView("tasks");
     setEditingTaskId(task.id);
@@ -353,6 +367,7 @@ function App() {
             memberForm={memberForm}
             onMemberChange={(key, value) => updateForm(setMemberForm, key, value)}
             onMemberSubmit={handleCreateMember}
+            onRemoveMember={handleRemoveMember}
           />
         );
       case "activity":
