@@ -20,12 +20,7 @@ export const forgotPasswordHandler = asyncHandler(async (req, res) => {
   // Generate the absolute reset URL
   const resetUrl = `${req.get("origin") || config.clientUrl}/reset-password?token=${token}`;
 
-  // Await email sending and handle failure
-  const isSent = await sendPasswordResetEmail(email, name, resetUrl);
-
-  if (!isSent) {
-    throw new AppError(500, "Email delivery failed. Please try again later.");
-  }
+  await sendPasswordResetEmail(email, name, resetUrl);
 
   res.json({
     success: true,

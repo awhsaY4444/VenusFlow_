@@ -1,6 +1,8 @@
 import crypto from "node:crypto";
 import { pool, withTransaction } from "../db.js";
 import { AppError, NotFoundError, ConflictError } from "../utils/errors.js";
+import { config } from "../config.js";
+import { sendInviteLinkEmail } from "../utils/email.js";
 
 /**
  * Creates a unique invitation token and stores it.
@@ -23,9 +25,14 @@ export async function createInvite({ organizationId, email, role = 'member' }) {
   }
 
   const invite = result.rows[0];
+  const orgResult = await pool.query(
+    "SELECT name FROM organizations WHERE id = $1",
+    [organizationId]
+  );
+  const workspaceName = orgResult.rows[0]?.name || "VenusFlow";
+  const inviteUrl = `${config.appUrl}/accept-invite?token=${token}`;
 
-  // In a real app, you would send an email here.
-  console.log(`[INVITE MOCK] Sending invite to ${email} with token: ${token}`);
+  await sendInviteLinkEmail(email.toLowerCase(), workspaceName, inviteUrl, role);
 
   return {
     id: invite.id,

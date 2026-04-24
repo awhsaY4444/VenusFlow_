@@ -1,30 +1,65 @@
 import nodemailer from "nodemailer";
 import { config } from "../config.js";
+import { EmailServiceError } from "./errors.js";
 
-/**
- * Creates a Nodemailer transporter configured for Gmail SMTP.
- * Note: Gmail requires an "App Password" to be used as EMAIL_PASS.
- */
-const transporter = nodemailer.createTransport({
-  host: config.mail.host, // smtp.gmail.com
-  port: config.mail.port, // 587
-  secure: false, // true for 465, false for other ports
-  auth: {
+let transporter;
+
+function redactEmailConfig() {
+  return {
+    host: config.mail.host,
+    port: config.mail.port,
+    secure: config.mail.secure,
     user: config.mail.user,
-    pass: config.mail.pass,
-  },
-});
+    from: config.mail.from,
+    hasPassword: Boolean(config.mail.pass),
+  };
+}
+
+function getTransporter() {
+  if (!config.mail.host || !config.mail.user || !config.mail.pass) {
+    throw new EmailServiceError(
+      "Email service failed: missing SMTP configuration",
+      redactEmailConfig()
+    );
+  }
+
+  if (!transporter) {
+    transporter = nodemailer.createTransport({
+      host: config.mail.host,
+      port: config.mail.port,
+      secure: config.mail.secure,
+      requireTLS: !config.mail.secure,
+      auth: {
+        user: config.mail.user,
+        pass: config.mail.pass,
+      },
+    });
+  }
+
+  return transporter;
+}
+
+function formatEmailError(error) {
+  return (
+    error?.response ||
+    error?.message ||
+    "Unknown SMTP error"
+  ).replace(/\s+/g, " ").trim();
+}
 
 /**
- * Robust function to send an email.
- * @param {Object} options - { to, subject, html, text }
- * @returns {Promise<boolean>} - Returns true if sent successfully, false otherwise.
+ * Sends an email and throws a meaningful API-safe error on failure.
  */
 export async function sendEmail({ to, subject, html, text }) {
-  console.log(`[Email] Attempting to send email to: ${to} (Subject: "${subject}")`);
+  console.log("[Email] Attempting delivery", {
+    to,
+    subject,
+    ...redactEmailConfig(),
+  });
 
   try {
-    const info = await transporter.sendMail({
+    const activeTransporter = getTransporter();
+    const info = await activeTransporter.sendMail({
       from: config.mail.from,
       to,
       subject,
@@ -32,18 +67,36 @@ export async function sendEmail({ to, subject, html, text }) {
       text,
     });
 
-    console.log(`[Email] Success! Message sent. ID: ${info.messageId}`);
-    return true;
+    console.log("[Email] Success", {
+      to,
+      subject,
+      messageId: info.messageId,
+      response: info.response,
+    });
+
+    return info;
   } catch (error) {
-    console.error("[Email] Critical delivery failure:");
-    console.error(error); // Logs full error stack as requested
-    return false;
+    const details = {
+      message: error?.message,
+      code: error?.code,
+      command: error?.command,
+      response: error?.response,
+      responseCode: error?.responseCode,
+      config: redactEmailConfig(),
+    };
+
+    console.error("[Email] Critical delivery failure", details);
+
+    throw new EmailServiceError(
+      `Email service failed: ${formatEmailError(error)}`,
+      details
+    );
   }
 }
 
 /**
  * Specifically sends a password reset email.
- * @returns {Promise<boolean>}
+ * @returns {Promise<object>}
  */
 export async function sendPasswordResetEmail(email, name, resetUrl) {
   const subject = "Reset your VenusFlow Password";
@@ -77,6 +130,30 @@ export async function sendPasswordResetEmail(email, name, resetUrl) {
   return sendEmail({ to: email, subject, html });
 }
 
+export async function sendInviteLinkEmail(email, workspaceName, inviteUrl, role) {
+  const subject = `You're invited to join ${workspaceName} on VenusFlow`;
+  const html = `
+    <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1e293b;">
+      <div style="background-color: #2563eb; padding: 40px; text-align: center; border-radius: 12px 12px 0 0;">
+        <h1 style="color: white; margin: 0; font-size: 28px;">VenusFlow</h1>
+      </div>
+      <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: 0; border-radius: 0 0 12px 12px;">
+        <h2 style="margin-top: 0;">You're invited</h2>
+        <p style="font-size: 16px; line-height: 24px;">
+          You have been invited to join <strong>${workspaceName}</strong> as a <strong>${role}</strong>.
+        </p>
+        <div style="text-align: center; margin: 40px 0;">
+          <a href="${inviteUrl}" style="background-color: #2563eb; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
+            Accept Invitation
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return sendEmail({ to: email, subject, html });
+}
+
 /**
  * Sends an invitation email to a new team member.
  * @param {string} email - Recipient email.
@@ -103,7 +180,7 @@ export async function sendMemberInvitationEmail(email, name, workspaceName, temp
           <p style="margin: 0; font-size: 20px; font-weight: bold; color: #0f172a; letter-spacing: 1px;">${tempPassword}</p>
         </div>
         <div style="text-align: center; margin: 40px 0;">
-          <a href="${config.clientUrl}" style="background-color: #059669; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
+          <a href="${config.appUrl}" style="background-color: #059669; color: white; padding: 16px 32px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block;">
             Sign In Now
           </a>
         </div>
@@ -120,4 +197,3 @@ export async function sendMemberInvitationEmail(email, name, workspaceName, temp
 
   return sendEmail({ to: email, subject, html });
 }
-

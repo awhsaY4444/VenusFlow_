@@ -285,7 +285,12 @@ usersRouter.post(
 
     const user = result.rows[0];
 
-    sendMemberInvitationEmail(email.toLowerCase(), name, organizationName, password).catch(console.error);
+    await sendMemberInvitationEmail(
+      email.toLowerCase(),
+      name,
+      organizationName,
+      password
+    );
 
     res.status(201).json({ success: true, user });
   })

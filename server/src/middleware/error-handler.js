@@ -1,13 +1,19 @@
 export function errorHandler(error, _req, res, _next) {
   const statusCode = error.statusCode || 500;
-  const message = statusCode === 500 ? "Internal server error" : error.message;
+  const message = error.message || "Internal server error";
 
   if (statusCode === 500) {
     console.error(error);
   }
 
-  res.status(statusCode).json({
+  const payload = {
     success: false,
     message,
-  });
+  };
+
+  if (error.details) {
+    payload.details = error.details;
+  }
+
+  res.status(statusCode).json(payload);
 }

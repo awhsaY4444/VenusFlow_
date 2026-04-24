@@ -38,3 +38,10 @@ export class ConflictError extends AppError {
   }
 }
 
+export class EmailServiceError extends AppError {
+  constructor(message = "Email service failed", details = null) {
+    super(500, message);
+    this.details = details;
+  }
+}
+
