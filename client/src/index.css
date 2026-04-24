@@ -56,8 +56,6 @@
       radial-gradient(circle at top right, rgba(125, 211, 252, 0.16), transparent 22%),
       linear-gradient(180deg, #f8fafc 0%, #f3f6fb 100%);
     color: var(--color-ink-900);
-    overflow: hidden;
-    height: 100vh;
   }
 
   html[data-theme="dark"] {
@@ -68,15 +66,20 @@
     color: var(--color-ink-900);
   }
 
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
   body {
     @apply antialiased text-base leading-relaxed text-ink-900;
-    overflow: hidden;
-    height: 100vh;
+    min-height: 100vh;
+    overflow-x: hidden;
   }
 
   #root {
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
