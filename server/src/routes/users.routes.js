@@ -257,7 +257,9 @@ usersRouter.post(
       throw new AppError(400, "Role must be admin or member");
     }
 
+    console.log(`[Transaction] Starting invitation for ${email}`);
     const user = await withTransaction(async (client) => {
+      console.log(`[Transaction] Querying existing user...`);
       const existingUser = await client.query("SELECT id FROM users WHERE email = $1", [
         email.toLowerCase(),
       ]);
@@ -285,6 +287,7 @@ usersRouter.post(
       );
 
       const newUser = result.rows[0];
+      console.log(`[Transaction] User ${newUser.id} inserted, sending email...`);
 
       // Send invitation email. If this fails, the transaction will rollback.
       await sendMemberInvitationEmail(
@@ -294,9 +297,11 @@ usersRouter.post(
         password
       );
 
+      console.log(`[Transaction] Email sent, returning user...`);
       return newUser;
     });
 
+    console.log(`[Transaction] Completed successfully for ${user.id}`);
     res.status(201).json({ success: true, user });
   })
 );
