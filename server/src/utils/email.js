@@ -85,11 +85,7 @@ export async function sendEmail({ to, subject, html, text }) {
       config: redactEmailConfig(),
     };
 
-    console.error("[Email] Critical delivery failure", {
-      ...details,
-      smtp_user: config.mail.user,
-      smtp_host: config.mail.host,
-    });
+    console.error("[Email] Critical delivery failure", details);
 
     throw new EmailServiceError(
       `Email service failed: ${formatEmailError(error)}`,

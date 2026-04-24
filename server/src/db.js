@@ -13,8 +13,6 @@ const isLocalhost =
 
 const useSsl = process.env.DB_SSL === "true" || (!isLocalhost && process.env.DB_SSL !== "false");
 
-const dbUrlSource = process.env.DATABASE_URL ? "Environment Variable" : "Fallback Default";
-console.log(`[DB] Using Database URL from: ${dbUrlSource}`);
 console.log(`Connecting to database at ${dbUrl.split('@').pop()} (SSL: ${useSsl ? 'Enabled' : 'Disabled'})`);
 
 export const pool = new Pool({
