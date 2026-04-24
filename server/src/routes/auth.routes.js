@@ -233,3 +233,19 @@ authRouter.post("/forgot-password", forgotPasswordHandler);
  *         description: Password reset successful
  */
 authRouter.post("/reset-password", resetPasswordHandler);
+
+authRouter.get("/debug-smtp", (req, res) => {
+  const pass = config.mail.pass || "";
+  const maskedPass = pass.length > 4 
+    ? `${pass.substring(0, 2)}...${pass.substring(pass.length - 2)}`
+    : "****";
+    
+  res.json({
+    host: config.mail.host,
+    user: config.mail.user,
+    pass: maskedPass,
+    passLength: pass.length,
+    env_smtp_pass: process.env.SMTP_PASS ? "Set" : "Not Set",
+    env_email_pass: process.env.EMAIL_PASS ? "Set" : "Not Set"
+  });
+});
