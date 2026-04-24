@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import { asyncHandler } from "../utils/async-handler.js";
-import { query } from "../db.js";
+import { query, withTransaction } from "../db.js";
 import { AppError } from "../utils/errors.js";
 import { requireRole } from "../middleware/rbac.js";
 import { sendMemberInvitationEmail } from "../utils/email.js";
@@ -257,40 +257,45 @@ usersRouter.post(
       throw new AppError(400, "Role must be admin or member");
     }
 
-    const existingUser = await query("SELECT id FROM users WHERE email = $1", [
-      email.toLowerCase(),
-    ]);
-
-    if (existingUser.rows[0]) {
-      throw new AppError(409, "A user with this email already exists");
-    }
-
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    const orgResult = await query("SELECT name FROM organizations WHERE id = $1", [req.user.organizationId]);
-    const organizationName = orgResult.rows[0]?.name || "VenusFlow";
-
-    const result = await query(
-      `INSERT INTO users (organization_id, name, email, password_hash, role)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, name, email, role, auth_provider, created_at`,
-      [
-        req.user.organizationId,
-        name,
+    const user = await withTransaction(async (client) => {
+      const existingUser = await client.query("SELECT id FROM users WHERE email = $1", [
         email.toLowerCase(),
-        passwordHash,
-        role,
-      ]
-    );
+      ]);
 
-    const user = result.rows[0];
+      if (existingUser.rows[0]) {
+        throw new AppError(409, "A user with this email already exists");
+      }
 
-    await sendMemberInvitationEmail(
-      email.toLowerCase(),
-      name,
-      organizationName,
-      password
-    );
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      const orgResult = await client.query("SELECT name FROM organizations WHERE id = $1", [req.user.organizationId]);
+      const organizationName = orgResult.rows[0]?.name || "VenusFlow";
+
+      const result = await client.query(
+        `INSERT INTO users (organization_id, name, email, password_hash, role)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id, name, email, role, auth_provider, created_at`,
+        [
+          req.user.organizationId,
+          name,
+          email.toLowerCase(),
+          passwordHash,
+          role,
+        ]
+      );
+
+      const newUser = result.rows[0];
+
+      // Send invitation email. If this fails, the transaction will rollback.
+      await sendMemberInvitationEmail(
+        email.toLowerCase(),
+        name,
+        organizationName,
+        password
+      );
+
+      return newUser;
+    });
 
     res.status(201).json({ success: true, user });
   })

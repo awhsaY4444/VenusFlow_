@@ -4,13 +4,20 @@ import { AsyncLocalStorage } from "node:async_hooks";
 
 const { Pool } = pg;
 
-const isLocalhost = config.databaseUrl.includes("localhost") || config.databaseUrl.includes("127.0.0.1");
+const dbUrl = config.databaseUrl;
+const isLocalhost = 
+  dbUrl.includes("localhost") || 
+  dbUrl.includes("127.0.0.1") || 
+  dbUrl.includes("::1") ||
+  process.env.DB_SSL === "false";
+
+const useSsl = process.env.DB_SSL === "true" || (!isLocalhost && process.env.DB_SSL !== "false");
+
+console.log(`Connecting to database at ${dbUrl.split('@').pop()} (SSL: ${useSsl ? 'Enabled' : 'Disabled'})`);
 
 export const pool = new Pool({
-  connectionString: config.databaseUrl,
-  ssl: isLocalhost ? false : {
-    rejectUnauthorized: false,
-  },
+  connectionString: dbUrl,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
 });
 
 export const tenantStorage = new AsyncLocalStorage();

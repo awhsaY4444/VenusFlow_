@@ -49,7 +49,7 @@
   }
 
   html {
-    font-size: 19px;
+    font-size: 17px;
     font-family: var(--font-sans);
     background:
       radial-gradient(circle at top left, rgba(18, 184, 134, 0.14), transparent 24%),
@@ -130,7 +130,7 @@
   }
 
   .nav-item {
-    @apply flex items-center gap-3 rounded-xl px-3.5 py-3 text-lg font-medium text-ink-700 transition hover:bg-surface-muted hover:text-ink-950;
+    @apply flex items-center gap-3 rounded-xl px-3.5 py-3 text-base font-medium text-ink-700 transition hover:bg-surface-muted hover:text-ink-950;
   }
 
   .nav-item-active {
@@ -138,35 +138,35 @@
   }
 
   .topbar-input {
-    @apply h-12 rounded-xl border border-line bg-surface pl-11 pr-4 text-lg text-ink-900 placeholder:text-ink-500 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
+    @apply h-12 rounded-xl border border-line bg-surface pl-11 pr-4 text-base text-ink-900 placeholder:text-ink-500 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
   }
 
   .field-input {
-    @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-lg text-ink-900 placeholder:text-ink-500 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
+    @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-ink-900 placeholder:text-ink-500 outline-none transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100;
   }
 
   .field-label {
-    @apply mb-2 block text-lg font-semibold uppercase tracking-[0.14em] text-ink-600;
+    @apply mb-2 block text-base font-semibold uppercase tracking-[0.14em] text-ink-600;
   }
 
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-lg font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-ink-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-ink-950 px-5 py-3 text-base font-semibold text-surface transition hover:-translate-y-0.5 hover:bg-ink-900;
   }
 
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-3 text-lg font-semibold text-ink-700 transition hover:-translate-y-0.5 hover:border-ink-500 hover:text-ink-950;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 py-3 text-base font-semibold text-ink-700 transition hover:-translate-y-0.5 hover:border-ink-500 hover:text-ink-950;
   }
 
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-lg font-medium text-ink-600 transition hover:bg-surface-muted hover:text-ink-950;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-base font-medium text-ink-600 transition hover:bg-surface-muted hover:text-ink-950;
   }
 
   .section-title {
-    @apply text-4xl font-bold tracking-tight text-ink-950;
+    @apply text-3xl font-bold tracking-tight text-ink-950;
   }
 
   .section-kicker {
-    @apply text-lg font-bold uppercase tracking-[0.16em] text-ink-600;
+    @apply text-base font-bold uppercase tracking-[0.16em] text-ink-600;
   }
 }
 

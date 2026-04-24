@@ -2,9 +2,12 @@
 FROM node:22-bookworm-slim AS builder
 WORKDIR /app
 COPY package*.json ./
+COPY server/package*.json ./server/
+COPY client/package*.json ./client/
 RUN npm install
 
 COPY . .
+RUN npm run build
 
 # Stage 2: Production
 FROM node:22-bookworm-slim
@@ -16,10 +19,13 @@ ENV NODE_ENV=production
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/server/package*.json ./server/
 RUN npm install --omit=dev
 
-COPY --from=builder /app/src ./src
+COPY --from=builder /app/server/src ./server/src
+COPY --from=builder /app/server/dist ./server/dist
 
+WORKDIR /app/server
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD curl -f http://localhost:4000/health || exit 1
 

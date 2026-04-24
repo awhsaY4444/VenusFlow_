@@ -165,7 +165,7 @@ export async function forgotPassword(email) {
 
     const user = userResult.rows[0];
     if (!user) {
-      throw new AppError(404, "No account found with this email");
+      return { success: true };
     }
 
     const rawToken = crypto.randomBytes(32).toString("hex");
@@ -178,7 +178,7 @@ export async function forgotPassword(email) {
       [hashedToken, expires, user.id]
     );
 
-    return { token: rawToken, name: user.name };
+    return { success: true, token: rawToken, name: user.name };
   });
 }
 
