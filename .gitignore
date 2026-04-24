@@ -59,3 +59,5 @@ docker-data/
 .tmp/
 .tools/
 .cache/db_data/ 
+
+.vercel
