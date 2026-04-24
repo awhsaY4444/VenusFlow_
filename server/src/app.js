@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
+import fs from "fs";
 import { rateLimit } from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -47,7 +48,14 @@ app.use("/api/", limiter);
 ========================= */
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin(origin, callback) {
+      if (!origin || config.allowedOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error("Origin not allowed by CORS"));
+    },
     credentials: false,
   })
 );
@@ -83,16 +91,21 @@ app.use("/api/analytics", requireAuth, tenantMiddleware, analyticsRouter);
 ========================= */
 app.use(errorHandler);
 
-/* =========================
-   8. Serve Frontend (IMPORTANT)
-========================= */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const frontendDistPath = path.join(__dirname, "../dist");
 
-// serve static frontend
-app.use(express.static(path.join(__dirname, "../dist")));
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
 
-// fallback to React app
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../dist/index.html"));
-});
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(frontendDistPath, "index.html"));
+  });
+} else {
+  app.get("/", (_req, res) => {
+    res.json({
+      success: true,
+      message: "VenusFlow API is running",
+    });
+  });
+}

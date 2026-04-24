@@ -1,5 +1,6 @@
 import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { config } from "../config.js";
 
 const options = {
   definition: {
@@ -11,8 +12,8 @@ const options = {
     },
     servers: [
       {
-        url: "https://venusflow.onrender.com",
-        description: "Development server",
+        url: config.clientUrl ? "/api" : "http://localhost:4000/api",
+        description: "VenusFlow API",
       },
     ],
     components: {
