@@ -360,18 +360,16 @@ export function SettingsPage() {
                   </button>
                 </form>
 
-
-                  <article className="surface-panel p-5">
-                    <p className="text-sm font-semibold text-ink-950">{t("English", "activeSession")}</p>
-                    <div className="mt-3 flex items-center gap-3">
-                      <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                      <div>
-                        <p className="text-sm text-ink-700">{t("English", "currentBrowserSession")}</p>
-                        <p className="text-xs text-ink-500">{t("English", "jwtSession")}</p>
-                      </div>
+                <article className="surface-panel p-5">
+                  <p className="text-sm font-semibold text-ink-950">{t("English", "activeSession")}</p>
+                  <div className="mt-3 flex items-center gap-3">
+                    <ShieldCheck className="h-5 w-5 text-emerald-600" />
+                    <div>
+                      <p className="text-sm text-ink-700">{t("English", "currentBrowserSession")}</p>
+                      <p className="text-xs text-ink-500">{t("English", "jwtSession")}</p>
                     </div>
-                  </article>
-                </div>
+                  </div>
+                </article>
               </div>
             </section>
           ) : null}
