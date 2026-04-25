@@ -56,7 +56,6 @@ export function SettingsPage() {
       taskUpdates: true,
       mentions: true,
     },
-    twoFactorEnabled: false,
   });
 
   const visibleTabs = useMemo(
@@ -97,7 +96,6 @@ export function SettingsPage() {
         theme: profileRes.user.theme,
         workspaceName: profileRes.user.organizationName,
         notifications: profileRes.user.notifications,
-        twoFactorEnabled: false,
       });
       applyAppearance({
         theme: profileRes.user.theme,
@@ -362,33 +360,6 @@ export function SettingsPage() {
                   </button>
                 </form>
 
-                <div className="space-y-4">
-                  <article className="surface-panel p-5">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-ink-950">{t("English", "twoFactor")}</p>
-                        <p className="mt-1 text-sm text-ink-600">{t("English", "twoFactorDescription")}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className={`relative inline-flex h-7 w-12 items-center rounded-full transition ${
-                          form.twoFactorEnabled ? "bg-brand-600" : "bg-slate-300"
-                        }`}
-                        onClick={() =>
-                          setForm((current) => ({
-                            ...current,
-                            twoFactorEnabled: !current.twoFactorEnabled,
-                          }))
-                        }
-                      >
-                        <span
-                          className={`inline-block h-5 w-5 transform rounded-full bg-white transition ${
-                            form.twoFactorEnabled ? "translate-x-6" : "translate-x-1"
-                          }`}
-                        />
-                      </button>
-                    </div>
-                  </article>
 
                   <article className="surface-panel p-5">
                     <p className="text-sm font-semibold text-ink-950">{t("English", "activeSession")}</p>
