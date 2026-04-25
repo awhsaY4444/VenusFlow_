@@ -14,7 +14,7 @@ export function TeamView({
   onRemoveMember,
 }) {
   return (
-    <div className="h-full flex flex-col gap-8 overflow-hidden">
+    <div className="w-full flex flex-col gap-8">
 
       <SectionHeader
         kicker={tr("Team", "टीम")}
@@ -25,10 +25,9 @@ export function TeamView({
         )}
       />
 
-      <div className="grid flex-1 gap-6 xl:grid-cols-[0.9fr_1.1fr] overflow-hidden">
+      <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
 
-        <section className="glass-panel p-6 h-fit sticky top-0">
-
+        <section className="glass-panel p-6 h-fit">
           {user.role === "admin" ? (
             <>
               <SectionHeader
@@ -41,21 +40,21 @@ export function TeamView({
               />
 
               <form className="mt-6 space-y-5" onSubmit={onMemberSubmit}>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="min-w-0">
                     <label className="field-label">{tr("Name", "नाम")}</label>
                     <input
-                      className="field-input"
+                      className="field-input w-full"
                       value={memberForm.name}
                       onChange={(event) => onMemberChange("name", event.target.value)}
                       required
                     />
                   </div>
 
-                  <div>
+                  <div className="min-w-0">
                     <label className="field-label">{tr("Role", "रोल")}</label>
                     <select
-                      className="field-input"
+                      className="field-input w-full"
                       value={memberForm.role}
                       onChange={(event) => onMemberChange("role", event.target.value)}
                     >
@@ -68,7 +67,7 @@ export function TeamView({
                 <div>
                   <label className="field-label">{tr("Email", "ईमेल")}</label>
                   <input
-                    className="field-input"
+                    className="field-input w-full"
                     type="email"
                     value={memberForm.email}
                     onChange={(event) => onMemberChange("email", event.target.value)}
@@ -79,7 +78,7 @@ export function TeamView({
                 <div>
                   <label className="field-label">{tr("Temporary password", "अस्थायी पासवर्ड")}</label>
                   <input
-                    className="field-input"
+                    className="field-input w-full"
                     type="password"
                     value={memberForm.password}
                     onChange={(event) => onMemberChange("password", event.target.value)}
@@ -104,28 +103,26 @@ export function TeamView({
           )}
         </section>
 
-        <section className="flex flex-col gap-4 overflow-hidden">
+        <section className="flex flex-col gap-4 min-w-0">
           <SectionHeader
             kicker={tr("Directory", "डायरेक्टरी")}
             title={tr(`${users.length} people in this workspace`, `इस वर्कस्पेस में ${users.length} लोग`)}
             description={tr("Avatar-based people view with role context.", "रोल संदर्भ के साथ अवतार-आधारित लोगों का दृश्य।")}
           />
 
-          <div className="flex-1 overflow-y-auto space-y-4 pr-2 -mr-2">
-            <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
               {users.map((member) => (
                 <article
                   key={member.id}
-                  className="surface-panel flex items-center justify-between gap-4 p-5 transition hover:-translate-y-0.5 hover:shadow-sm"
+                  className="surface-panel flex items-center gap-3 p-4 transition hover:-translate-y-0.5 hover:shadow-sm min-w-0"
                 >
-                  <div className="flex items-center gap-3">
-                    <Avatar name={member.name} />
-                    <div>
-                      <p className="text-sm font-semibold text-ink-950">{member.name}</p>
-                      <p className="text-sm text-ink-500">{member.email}</p>
-                    </div>
+                  <Avatar name={member.name} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-ink-950 truncate">{member.name}</p>
+                    <p className="text-sm text-ink-500 truncate">{member.email}</p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 shrink-0">
                     <StatusBadge value={member.role} />
                     {user.role === "admin" && member.id !== user.id && (
                       <button
@@ -141,21 +138,21 @@ export function TeamView({
               ))}
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="surface-panel p-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="surface-panel p-5 min-w-0">
                 <Users className="h-5 w-5 text-brand-600" />
-                <h3 className="mt-4 text-base font-semibold">{tr("Tenant-scoped users", "टेनेंट-स्कोप्ड यूजर")}</h3>
-                <p className="mt-2 text-sm text-ink-600">
+                <h3 className="mt-4 text-base font-semibold break-words">{tr("Tenant-scoped users", "टेनेंट-स्कोप्ड यूजर")}</h3>
+                <p className="mt-2 text-sm text-ink-600 break-words">
                   {tr(
                     "Every team member belongs only to the current organization.",
                     "हर टीम सदस्य केवल मौजूदा संगठन से जुड़ा है।",
                   )}
                 </p>
               </div>
-              <div className="surface-panel p-5">
+              <div className="surface-panel p-5 min-w-0">
                 <Shield className="h-5 w-5 text-emerald-600" />
-                <h3 className="mt-4 text-base font-semibold">{tr("Role-aware access", "रोल-आधारित एक्सेस")}</h3>
-                <p className="mt-2 text-sm text-ink-600">
+                <h3 className="mt-4 text-base font-semibold break-words">{tr("Role-aware access", "रोल-आधारित एक्सेस")}</h3>
+                <p className="mt-2 text-sm text-ink-600 break-words">
                   {tr(
                     "UI and backend permission boundaries stay aligned.",
                     "UI और बैकएंड परमिशन सीमाएं एक जैसी रहती हैं।",
