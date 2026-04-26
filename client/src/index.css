@@ -177,7 +177,7 @@
   
   @media (min-width: 768px) {
     .task-grid {
-      grid-template-columns: minmax(200px, 2.1fr) 140px 120px 170px 120px 130px;
+      grid-template-columns: minmax(160px, 2.5fr) 100px 100px 140px 100px 100px;
     }
   }
 

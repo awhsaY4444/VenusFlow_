@@ -61,7 +61,8 @@ export function TaskTable({
         </label>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-line bg-white">
+      <div className="overflow-x-auto overflow-y-hidden rounded-2xl border border-line bg-white">
+        <div className="min-w-[700px]">
         {tasks.length ? (
           <>
             <div className="hidden task-grid items-center border-b border-line bg-surface-muted px-5 py-3.5 text-xs font-bold uppercase tracking-[0.16em] text-ink-500 md:grid">
@@ -146,6 +147,7 @@ export function TaskTable({
             />
           </div>
         )}
+        </div>
       </div>
     </section>
   );
