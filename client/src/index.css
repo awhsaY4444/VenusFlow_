@@ -171,6 +171,16 @@
     @apply -translate-y-1 shadow-md;
   }
 
+  .task-grid {
+    @apply grid gap-4;
+  }
+  
+  @media (min-width: 768px) {
+    .task-grid {
+      grid-template-columns: minmax(200px, 2.1fr) 140px 120px 170px 120px 130px;
+    }
+  }
+
   .nav-item {
     @apply flex items-center gap-3 rounded-xl px-3.5 py-3 text-base font-medium text-ink-700 transition hover:bg-surface-muted hover:text-ink-950;
   }
