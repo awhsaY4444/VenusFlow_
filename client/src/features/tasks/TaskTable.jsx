@@ -69,11 +69,11 @@ export function TaskTable({
                 {tr("Task", "टास्क")}
                 <ArrowUpDown className="h-3.5 w-3.5" />
               </div>
-              <div>{tr("Status", "स्टेटस")}</div>
-              <div>{tr("Priority", "प्राथमिकता")}</div>
-              <div>{tr("Assignee", "असाइनी")}</div>
-              <div>{tr("Due", "देय")}</div>
-              <div>{tr("Actions", "एक्शन")}</div>
+              <div className="whitespace-nowrap">{tr("Status", "स्टेटस")}</div>
+              <div className="whitespace-nowrap">{tr("Priority", "प्राथमिकता")}</div>
+              <div className="whitespace-nowrap">{tr("Assignee", "असाइनी")}</div>
+              <div className="whitespace-nowrap">{tr("Due Date", "देय तिथि")}</div>
+              <div className="whitespace-nowrap">{tr("Actions", "एक्शन")}</div>
             </div>
             <div className="divide-y divide-line">
               {tasks.map((task) => (

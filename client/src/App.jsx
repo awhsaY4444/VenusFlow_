@@ -302,6 +302,17 @@ function App() {
     }
   }
 
+  async function handleDeleteComment(commentId) {
+    if (!selectedTask) return;
+    try {
+      await api.deleteTaskComment(selectedTask.id, commentId);
+      await loadTaskDetails(selectedTask);
+      pushToast(tr("Comment deleted.", "कमेंट हटा दिया गया।"), "success");
+    } catch (error) {
+      pushToast(error.message, "error");
+    }
+  }
+
   function handleViewNavigation(view) {
     setCurrentView(view);
     navigate("/");
@@ -357,6 +368,7 @@ function App() {
             commentBody={commentBody}
             onCommentChange={setCommentBody}
             onCommentSubmit={handleCommentSubmit}
+            onDeleteComment={handleDeleteComment}
           />
         );
       case "team":

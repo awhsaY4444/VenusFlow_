@@ -1,4 +1,4 @@
-import { MessageSquareMore, ScrollText } from "lucide-react";
+import { MessageSquareMore, ScrollText, Trash2 } from "lucide-react";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { SectionHeader } from "../../components/ui/SectionHeader";
 import { StatusBadge } from "../../components/ui/StatusBadge";
@@ -7,11 +7,13 @@ import { tr } from "../../utils/i18n";
 
 export function TaskDetailPanel({
   selectedTask,
+  userRole,
   audit,
   comments,
   commentBody,
   onCommentChange,
   onCommentSubmit,
+  onDeleteComment,
 }) {
   if (!selectedTask) {
     return (
@@ -160,9 +162,19 @@ export function TaskDetailPanel({
               {comments.length ? (
                 comments.map((comment) => (
                   <article key={comment.id} className="rounded-2xl border border-line bg-surface p-4 shadow-sm">
-                    <div className="flex items-center justify-between gap-3">
-                      <p className="text-sm font-bold text-ink-950">{comment.authorName}</p>
-                      <p className="text-xs font-medium text-ink-500">{formatDateTime(comment.createdAt)}</p>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-ink-950">{comment.authorName}</p>
+                        <p className="text-xs font-medium text-ink-500">{formatDateTime(comment.createdAt)}</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-ink-400 transition hover:bg-rose-50 hover:text-rose-600"
+                        title={tr("Delete comment", "कमेंट हटाएं")}
+                        onClick={() => onDeleteComment(comment.id)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
                     </div>
                     <p className="mt-2 text-base leading-6 text-ink-700">{comment.body}</p>
                   </article>

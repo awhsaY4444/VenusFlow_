@@ -471,3 +471,38 @@ export async function addTaskComment({
   });
 }
 
+export async function deleteTaskComment({ taskId, commentId, userId, role }) {
+  // Verify the task is accessible
+  const task = await getTaskById({ taskId, userId, role });
+
+  return withTransaction(async (client) => {
+    const commentResult = await client.query(
+      `SELECT id, author_id FROM task_comments WHERE id = $1 AND task_id = $2`,
+      [commentId, taskId]
+    );
+
+    const comment = commentResult.rows[0];
+
+    if (!comment) {
+      throw new NotFoundError("Comment not found");
+    }
+
+    // Members can only delete their own comments; admins can delete any
+    if (role === "member" && comment.author_id !== userId) {
+      throw new ForbiddenError("You can only delete your own comments");
+    }
+
+    await client.query(`DELETE FROM task_comments WHERE id = $1`, [commentId]);
+
+    await logTaskAction(client, {
+      organizationId: task.organizationId,
+      taskId,
+      actorId: userId,
+      action: "deleted comment",
+      changes: { before: { commentId }, after: null },
+    });
+
+    return { success: true };
+  });
+}
+

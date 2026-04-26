@@ -27,6 +27,7 @@ export function TasksView(props) {
     commentBody,
     onCommentChange,
     onCommentSubmit,
+    onDeleteComment,
   } = props;
 
   return (
@@ -70,11 +71,13 @@ export function TasksView(props) {
 
         <TaskDetailPanel
           selectedTask={selectedTask}
+          userRole={userRole}
           audit={audit}
           comments={comments}
           commentBody={commentBody}
           onCommentChange={onCommentChange}
           onCommentSubmit={onCommentSubmit}
+          onDeleteComment={onDeleteComment}
         />
       </div>
     </div>

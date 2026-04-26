@@ -120,6 +120,11 @@ export const api = {
       body: JSON.stringify({ body }),
     });
   },
+  deleteTaskComment(taskId, commentId) {
+    return request(`/tasks/${taskId}/comments/${commentId}`, {
+      method: "DELETE",
+    });
+  },
   forgotPassword(email) {
     return request("/auth/forgot-password", {
       method: "POST",

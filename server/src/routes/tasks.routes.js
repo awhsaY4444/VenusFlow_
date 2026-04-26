@@ -8,6 +8,7 @@ import {
   addTaskComment,
   createTask,
   deleteTask,
+  deleteTaskComment,
   getTaskById,
   listTaskAudit,
   listTaskComments,
@@ -238,5 +239,23 @@ tasksRouter.post(
     });
 
     res.status(201).json({ success: true, comment });
+  })
+);
+
+/**
+ * DELETE /api/tasks/:taskId/comments/:commentId
+ * Members can delete their own; admins can delete any.
+ */
+tasksRouter.delete(
+  "/:taskId/comments/:commentId",
+  asyncHandler(async (req, res) => {
+    const result = await deleteTaskComment({
+      taskId: req.params.taskId,
+      commentId: req.params.commentId,
+      userId: req.user.id,
+      role: req.user.role,
+    });
+
+    res.json(result);
   })
 );

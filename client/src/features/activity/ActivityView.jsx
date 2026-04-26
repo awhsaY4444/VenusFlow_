@@ -57,19 +57,37 @@ export function ActivityView({ activity, selectedTask, audit, comments }) {
         <section className="space-y-6">
           <div className="grid gap-4 md:grid-cols-3">
             <div className="surface-panel p-5">
-              <Activity className="h-5 w-5 text-brand-600" />
-              <p className="mt-4 text-sm text-ink-600">{tr("Workspace events", "वर्कस्पेस इवेंट्स")}</p>
-              <p className="mt-2 text-3xl font-semibold text-ink-950">{activity.length}</p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-ink-600">{tr("Workspace events", "वर्कस्पेस इवेंट्स")}</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight text-ink-950">{activity.length}</p>
+                </div>
+                <div className="rounded-xl bg-slate-100 p-2.5 text-brand-600">
+                  <Activity className="h-5 w-5" />
+                </div>
+              </div>
             </div>
             <div className="surface-panel p-5">
-              <ScrollText className="h-5 w-5 text-amber-600" />
-              <p className="mt-4 text-sm text-ink-600">{tr("Selected task audit logs", "चुने हुए टास्क के ऑडिट लॉग")}</p>
-              <p className="mt-2 text-3xl font-semibold text-ink-950">{audit.length}</p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-ink-600">{tr("Task audit logs", "टास्क ऑडिट लॉग")}</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight text-ink-950">{audit.length}</p>
+                </div>
+                <div className="rounded-xl bg-amber-50 p-2.5 text-amber-600">
+                  <ScrollText className="h-5 w-5" />
+                </div>
+              </div>
             </div>
             <div className="surface-panel p-5">
-              <MessageSquareText className="h-5 w-5 text-cyan-600" />
-              <p className="mt-4 text-sm text-ink-600">{tr("Selected task comments", "चुने हुए टास्क के कमेंट्स")}</p>
-              <p className="mt-2 text-3xl font-semibold text-ink-950">{comments.length}</p>
+              <div className="flex items-start justify-between">
+                <div>
+                  <p className="text-sm text-ink-600">{tr("Task comments", "टास्क कमेंट्स")}</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight text-ink-950">{comments.length}</p>
+                </div>
+                <div className="rounded-xl bg-cyan-50 p-2.5 text-cyan-600">
+                  <MessageSquareText className="h-5 w-5" />
+                </div>
+              </div>
             </div>
           </div>
 
