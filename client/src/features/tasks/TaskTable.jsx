@@ -64,7 +64,7 @@ export function TaskTable({
       <div className="overflow-hidden rounded-2xl border border-line bg-white">
         {tasks.length ? (
           <>
-            <div className="hidden grid-cols-[2fr_140px_120px_170px_120px_130px] items-center gap-4 border-b border-line bg-surface-muted px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-ink-500 md:grid">
+            <div className="hidden grid-cols-[2fr_140px_120px_170px_120px_130px] items-center gap-4 border-b border-line bg-surface-muted px-5 py-3.5 text-xs font-bold uppercase tracking-[0.16em] text-ink-500 md:grid">
               <div className="flex items-center gap-2">
                 {tr("Task", "टास्क")}
                 <ArrowUpDown className="h-3.5 w-3.5" />
@@ -79,17 +79,17 @@ export function TaskTable({
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`group grid items-center gap-4 px-5 py-4 transition-all duration-300 hover:bg-surface-muted hover:-translate-y-0.5 hover:shadow-sm md:grid-cols-[2fr_140px_120px_170px_120px_130px] ${
+                  className={`group relative z-10 grid min-h-[64px] items-center gap-4 px-5 py-2.5 transition-all duration-300 hover:z-20 hover:-translate-y-[1px] hover:bg-surface-muted hover:shadow-md md:grid-cols-[2fr_140px_120px_170px_120px_130px] ${
                     selectedTask?.id === task.id ? "bg-brand-50/50" : ""
                   }`}
                 >
                   <button
                     type="button"
-                    className="min-w-0 text-left"
+                    className="flex min-w-0 flex-col justify-center text-left"
                     onClick={() => onSelect(task)}
                   >
-                    <p className="truncate text-base font-medium text-ink-950">{task.title}</p>
-                    <p className="mt-1 truncate text-base text-ink-500">
+                    <p className="truncate text-sm font-semibold text-ink-950 leading-tight">{task.title}</p>
+                    <p className="truncate text-xs font-medium text-ink-500 mt-0.5">
                       {task.description || tr("No description", "कोई विवरण नहीं")}
                     </p>
                   </button>
@@ -99,13 +99,13 @@ export function TaskTable({
                   <div className="flex items-center">
                     <StatusBadge value={task.priority} />
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
                     <Avatar name={task.assigneeName || tr("Unassigned", "असाइन नहीं")} size="sm" />
-                    <span className="truncate text-base text-ink-700">
+                    <span className="truncate text-sm font-medium text-ink-700">
                       {task.assigneeName || tr("Unassigned", "असाइन नहीं")}
                     </span>
                   </div>
-                  <div className="flex items-center text-base text-ink-600">
+                  <div className="flex items-center text-sm font-medium tabular-nums text-ink-600 whitespace-nowrap">
                     {formatDate(task.dueDate)}
                   </div>
                   <div className="flex items-center gap-1">
