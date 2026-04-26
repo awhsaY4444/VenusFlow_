@@ -8,6 +8,7 @@ import {
   Users,
 } from "lucide-react";
 import { Avatar } from "../components/ui/Avatar";
+import venusLogo from "../components/topbar/vf.png";
 import { StatusBadge } from "../components/ui/StatusBadge";
 import { t } from "../utils/i18n";
 
@@ -36,9 +37,11 @@ export function SidebarNav({
       <div className="flex h-full flex-col gap-5 px-4 py-5 overflow-hidden">
         <div className="flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
-            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-ink-950 text-sm font-bold text-white shrink-0">
-              VF
-            </div>
+            <img
+              src={venusLogo}
+              alt="VenusFlow"
+              className="h-10 w-10 rounded-2xl object-contain shrink-0"
+            />
             {!collapsed ? (
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-ink-950">
