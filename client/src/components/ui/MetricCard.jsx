@@ -15,8 +15,8 @@ export function MetricCard({ icon: Icon, label, value, tone = "default" }) {
           <p className="text-sm text-ink-600">{label}</p>
           <p className="mt-3 text-3xl font-semibold tracking-tight text-ink-950">{value}</p>
         </div>
-        <div className={`rounded-xl p-2.5 ${toneClass}`}>
-          <Icon className="h-5 w-5" />
+        <div className={`flex items-center justify-center rounded-xl p-2.5 ${toneClass}`}>
+          <Icon className="h-5 w-5 animate-float" />
         </div>
       </div>
     </article>

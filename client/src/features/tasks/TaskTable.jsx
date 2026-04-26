@@ -79,7 +79,7 @@ export function TaskTable({
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`grid gap-4 px-5 py-4 transition hover:bg-surface-muted md:grid-cols-[minmax(0,2.1fr)_140px_120px_170px_120px_130px] ${
+                  className={`group grid items-center gap-4 px-5 py-4 transition-all duration-300 hover:bg-surface-muted hover:-translate-y-0.5 hover:shadow-sm md:grid-cols-[minmax(0,2.1fr)_140px_120px_170px_120px_130px] ${
                     selectedTask?.id === task.id ? "bg-brand-50/50" : ""
                   }`}
                 >

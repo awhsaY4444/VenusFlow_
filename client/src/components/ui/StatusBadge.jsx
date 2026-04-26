@@ -18,7 +18,7 @@ function formatLabel(value) {
 export function StatusBadge({ value }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-1 text-sm font-semibold capitalize ${
+      className={`inline-flex items-center justify-center min-w-[5.5rem] h-6 rounded-full px-2.5 text-xs font-bold capitalize leading-none tracking-wide ${
         statusClasses[value] || "bg-slate-100 text-slate-700"
       }`}
     >

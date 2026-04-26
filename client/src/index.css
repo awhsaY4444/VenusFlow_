@@ -49,7 +49,7 @@
   }
 
   html {
-    font-size: 17px;
+    font-size: 16px;
     font-family: var(--font-sans);
     background:
       radial-gradient(circle at top left, rgba(18, 184, 134, 0.14), transparent 24%),
@@ -115,6 +115,40 @@
 }
 
 @layer components {
+
+  h1, h2, h3, h4 {
+    @apply text-ink-950;
+  }
+
+  button, input, textarea, select {
+    font: inherit;
+  }
+
+  /* Custom Scrollbar Styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-line/60 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-line;
+  }
+}
+
+@layer components {
   .app-shell {
     @apply grid h-full grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)];
     overflow: hidden;
@@ -122,11 +156,19 @@
 
 
   .glass-panel {
-    @apply rounded-2xl border border-line/50 bg-surface/80 shadow-[0_20px_60px_rgba(15,23,32,0.08)] backdrop-blur-xl;
+    @apply rounded-2xl border border-line/50 bg-surface/80 shadow-[0_20px_60px_rgba(15,23,32,0.08)] backdrop-blur-xl transition-all duration-300;
+  }
+  
+  .glass-panel:hover {
+    @apply -translate-y-1 shadow-[0_25px_65px_rgba(15,23,32,0.12)];
   }
 
   .surface-panel {
-    @apply rounded-2xl border border-line/50 bg-surface;
+    @apply rounded-2xl border border-line/50 bg-surface transition-all duration-300;
+  }
+
+  .surface-panel:hover {
+    @apply -translate-y-1 shadow-md;
   }
 
   .nav-item {
@@ -184,5 +226,14 @@
   html[data-theme="dark"] textarea,
   html[data-theme="dark"] select {
     color-scheme: dark;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
   }
 }
