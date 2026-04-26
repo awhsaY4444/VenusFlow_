@@ -6,6 +6,7 @@ import { QuickActions } from "./QuickActions";
 import { SearchBar } from "./SearchBar";
 import { UserMenu } from "./UserMenu";
 import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
+import venusLogo from "./vf.png";
 
 const mockNotifications = [
   {
@@ -133,6 +134,14 @@ export function Topbar({
         >
           <PanelLeft className="h-4 w-4" />
         </button>
+
+        <div className="flex items-center shrink-0">
+          <img
+            src={venusLogo}
+            alt="VenusFlow"
+            className="h-8 w-auto object-contain"
+          />
+        </div>
 
         <WorkspaceSwitcher
           currentWorkspace={currentWorkspace}
