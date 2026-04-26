@@ -64,7 +64,7 @@ export function TaskTable({
       <div className="overflow-hidden rounded-2xl border border-line bg-white">
         {tasks.length ? (
           <>
-            <div className="hidden grid-cols-[minmax(0,2.1fr)_140px_120px_170px_120px_130px] items-center gap-4 border-b border-line bg-surface-muted px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-ink-500 md:grid">
+            <div className="hidden grid-cols-[2fr_140px_120px_170px_120px_130px] items-center gap-4 border-b border-line bg-surface-muted px-5 py-3 text-sm font-semibold uppercase tracking-[0.16em] text-ink-500 md:grid">
               <div className="flex items-center gap-2">
                 {tr("Task", "टास्क")}
                 <ArrowUpDown className="h-3.5 w-3.5" />
@@ -79,7 +79,7 @@ export function TaskTable({
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className={`group grid items-center gap-4 px-5 py-4 transition-all duration-300 hover:bg-surface-muted hover:-translate-y-0.5 hover:shadow-sm md:grid-cols-[minmax(0,2.1fr)_140px_120px_170px_120px_130px] ${
+                  className={`group grid items-center gap-4 px-5 py-4 transition-all duration-300 hover:bg-surface-muted hover:-translate-y-0.5 hover:shadow-sm md:grid-cols-[2fr_140px_120px_170px_120px_130px] ${
                     selectedTask?.id === task.id ? "bg-brand-50/50" : ""
                   }`}
                 >
